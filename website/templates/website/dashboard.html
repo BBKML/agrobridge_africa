@@ -1,0 +1,266 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - AgroBridge Africa{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 3rem;
+    }
+
+    .dashboard-header h1 {
+        color: var(--primary-green);
+        font-size: 2.5rem;
+    }
+
+    .logout-link {
+        background: var(--primary-gold);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .logout-link:hover {
+        background: var(--light-gold);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-left: 5px solid var(--primary-gold);
+    }
+
+    .stat-card h3 {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .number {
+        color: var(--primary-green);
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    .quick-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .quick-link-btn {
+        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .quick-link-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .quick-link-btn h3 {
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .recent-messages {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .recent-messages h2 {
+        color: var(--primary-green);
+        margin-bottom: 1.5rem;
+    }
+
+    .message-item {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .message-item:last-child {
+        border-bottom: none;
+    }
+
+    .message-info {
+        flex: 1;
+    }
+
+    .message-info strong {
+        color: var(--primary-green);
+    }
+
+    .message-info p {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+        margin: 0.3rem 0;
+    }
+
+    .message-info .email {
+        color: var(--primary-gold);
+        text-decoration: none;
+    }
+
+    .message-unread {
+        background: var(--light-gray);
+        border-left: 3px solid var(--primary-gold);
+    }
+
+    .view-msg-btn {
+        background: var(--primary-gold);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .view-msg-btn:hover {
+        background: var(--light-gold);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-dark);
+    }
+
+    .empty-state p {
+        margin-bottom: 1rem;
+    }
+
+    .welcome-box {
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 3rem;
+    }
+
+    .welcome-box h2 {
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-box p {
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1>Dashboard AgroBridge Africa</h1>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-link">Déconnexion</button>
+        </form>
+    </div>
+
+    <!-- Welcome -->
+    <div class="welcome-box">
+        <h2>Bienvenue, {{ user.first_name|default:user.username }} !</h2>
+        <p>Gérez les contenus de votre site, consultez les messages de contact et modifiez vos produits et services.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Messages reçus</h3>
+            <div class="number">{{ stats.messages_total }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>Non lus</h3>
+            <div class="number" style="color: var(--primary-gold);">{{ stats.messages_unread }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>Produits</h3>
+            <div class="number">{{ stats.products_count }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>Services</h3>
+            <div class="number">{{ stats.services_count }}</div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <h2 style="color: var(--primary-green); margin-bottom: 1.5rem;">Accès rapide</h2>
+    <div class="quick-links">
+        <a href="{% url 'website:content_edit' 'hero' %}" class="quick-link-btn">
+            <h3>🏠 Hero</h3>
+            <p>Modifier la section d'accueil</p>
+        </a>
+        <a href="{% url 'website:products_manage' %}" class="quick-link-btn">
+            <h3>📦 Produits</h3>
+            <p>Gérer vos produits</p>
+        </a>
+        <a href="{% url 'website:services_manage' %}" class="quick-link-btn">
+            <h3>⚙️ Services</h3>
+            <p>Gérer vos services</p>
+        </a>
+        <a href="{% url 'website:messages_view' %}" class="quick-link-btn">
+            <h3>💬 Messages</h3>
+            <p>Consulter les contacts</p>
+        </a>
+    </div>
+
+    <!-- Recent Messages -->
+    <div class="recent-messages">
+        <h2>Messages récents</h2>
+        {% if recent_messages %}
+            {% for msg in recent_messages %}
+            <div class="message-item {% if not msg.is_read %}message-unread{% endif %}">
+                <div class="message-info">
+                    <strong>{{ msg.name }}</strong>
+                    <p><a href="mailto:{{ msg.email }}" class="email">{{ msg.email }}</a></p>
+                    <p>{{ msg.message|truncatewords:15 }}</p>
+                    <small>{{ msg.created_at|date:"d/m/Y H:i" }}</small>
+                </div>
+                <a href="{% url 'website:message_detail' msg.pk %}" class="view-msg-btn">Voir</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>Aucun message pour le moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

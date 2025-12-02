@@ -1,0 +1,113 @@
+/* Animations additionnelles pour rendre le site plus attractif */
+:root{
+    --anim-ease: cubic-bezier(.2,.9,.3,1);
+    --stagger-step: 120ms;
+}
+
+/* Respecter préférences utilisateur */
+@media (prefers-reduced-motion: reduce){
+    .animate-on-scroll,
+    .gallery-item img,
+    .product-image img,
+    .feature-card,
+    .service-card {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Entrée générale : fade + lift */
+@keyframes ab-fadeInUp {
+    from { opacity: 0; transform: translate3d(0, 18px, 0); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Subtil zoom pour hover */
+@keyframes ab-zoomIn {
+    from { transform: scale(1); }
+    to   { transform: scale(1.03); }
+}
+
+/* Flottement lent pour la hero */
+@keyframes ab-float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0); }
+}
+
+/* Classe utilitaire : éléments prêts à animer */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    will-change: opacity, transform;
+}
+
+/* Quand l'élément est visible */
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    animation: ab-fadeInUp 560ms var(--anim-ease) both;
+}
+
+/* Stagger helper : JS ajoute --stagger-index */
+.animate-on-scroll.animated {
+    animation-delay: calc(var(--stagger-index, 0) * var(--stagger-step));
+}
+
+/* Hero enhancements */
+.hero {
+    position: relative; /* déjà présent, on garantit */
+    overflow: hidden;
+}
+.hero .hero-inner {
+    animation: ab-float 8s ease-in-out infinite;
+    transform-origin: center;
+}
+
+/* Gallery: smoother entrance and hover */
+.gallery-item img {
+    transition: transform 520ms var(--anim-ease), filter 420ms var(--anim-ease), opacity 420ms var(--anim-ease);
+    will-change: transform, filter, opacity;
+    opacity: 0;
+}
+.gallery-item img.visible {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+}
+.gallery-item:hover img { transform: scale(1.08); filter: saturate(1.05); }
+
+/* Product thumbnails: subtle reveal */
+.product-image img {
+    transition: transform 520ms var(--anim-ease), opacity 420ms var(--anim-ease);
+    will-change: transform, opacity;
+    opacity: 0;
+}
+.product-image img.visible { opacity: 1; }
+.product-card:hover .product-image img { transform: scale(1.04); }
+
+/* CTA micro-interaction */
+.cta-button {
+    position: relative;
+    overflow: hidden;
+}
+.cta-button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0));
+    transform: translateX(-100%);
+    transition: transform 650ms var(--anim-ease);
+    pointer-events: none;
+}
+.cta-button:hover::after { transform: translateX(0%); }
+
+/* Small utility for delays when JS is not enabled */
+.gallery-grid .gallery-item:nth-child(1) img { transition-delay: 40ms; }
+.gallery-grid .gallery-item:nth-child(2) img { transition-delay: 120ms; }
+.gallery-grid .gallery-item:nth-child(3) img { transition-delay: 200ms; }
+.gallery-grid .gallery-item:nth-child(4) img { transition-delay: 280ms; }
+.gallery-grid .gallery-item:nth-child(5) img { transition-delay: 360ms; }
+.gallery-grid .gallery-item:nth-child(6) img { transition-delay: 440ms; }
+
+/* Ensure accessibility focus outlines remain visible */
+:focus { outline: 3px solid rgba(184,145,79,0.25); outline-offset: 2px; }

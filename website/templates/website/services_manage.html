@@ -1,0 +1,191 @@
+{% extends 'website/base.html' %}
+{% load static responsive_images %}
+
+{% block title %}Gestion des services - AgroBridge Africa{% endblock %}
+
+{% block extra_css %}
+<style>
+    .services-manage-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .manage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .manage-header h1 {
+        color: var(--primary-green);
+    }
+
+    .btn-new {
+        background: var(--primary-gold);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+
+    .btn-new:hover {
+        background: var(--light-gold);
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--primary-gold);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: all 0.3s;
+    }
+
+    .back-link:hover {
+        color: var(--light-gold);
+    }
+
+    .services-list {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .service-row {
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 1.5rem;
+        align-items: center;
+        transition: all 0.3s;
+    }
+
+    .service-row:last-child {
+        border-bottom: none;
+    }
+
+    .service-row:hover {
+        background: var(--light-gray);
+    }
+
+    .service-icon {
+        font-size: 2rem;
+    }
+
+    .service-info {
+        flex: 1;
+    }
+
+    .service-info h3 {
+        color: var(--primary-green);
+        margin-bottom: 0.3rem;
+    }
+
+    .service-info p {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .service-status {
+        background: var(--primary-gold);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .service-status.inactive {
+        background: #999;
+    }
+
+    .service-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .action-btn-edit {
+        background: var(--primary-gold);
+        color: white;
+    }
+
+    .action-btn-edit:hover {
+        background: var(--light-gold);
+    }
+
+    .action-btn-delete {
+        background: #f44336;
+        color: white;
+    }
+
+    .action-btn-delete:hover {
+        background: #d32f2f;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--text-dark);
+    }
+
+    .empty-state p {
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="services-manage-container">
+    <a href="{% url 'website:dashboard' %}" class="back-link">← Retour au dashboard</a>
+
+    <div class="manage-header">
+        <h1>Gestion des services</h1>
+        <a href="{% url 'website:service_new' %}" class="btn-new">+ Nouveau service</a>
+    </div>
+
+    {% if services %}
+        <div class="services-list">
+            {% for service in services %}
+            <div class="service-row">
+                <div style="width:48px;height:48px;border-radius:8px;overflow:hidden">
+                    {% responsive_image service.image service.name class_attr="" %}
+                </div>
+                <div class="service-info">
+                    <h3>{{ service.name }}</h3>
+                    <p>{{ service.description|truncatewords:15 }}</p>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <span class="service-status {% if not service.is_active %}inactive{% endif %}">
+                        {% if service.is_active %}Actif{% else %}Inactif{% endif %}
+                    </span>
+                    <div class="service-actions">
+                        <a href="{% url 'website:service_edit' service.pk %}" class="action-btn action-btn-edit">Éditer</a>
+                        <a href="{% url 'website:service_delete' service.pk %}" class="action-btn action-btn-delete" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>Aucun service trouvé.</p>
+            <a href="{% url 'website:service_new' %}" class="btn-new">Créer le premier service</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

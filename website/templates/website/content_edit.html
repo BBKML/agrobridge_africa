@@ -1,0 +1,164 @@
+{% extends 'website/base.html' %}
+{% load static responsive_images %}
+
+{% block title %}Éditer contenu - AgroBridge Africa{% endblock %}
+
+{% block extra_css %}
+<style>
+    .content-edit-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--primary-gold);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: all 0.3s;
+    }
+
+    .back-link:hover {
+        color: var(--light-gold);
+    }
+
+    .edit-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .edit-form h1 {
+        color: var(--primary-green);
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-group label {
+        display: block;
+        color: var(--primary-green);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-gold);
+        box-shadow: 0 0 0 3px rgba(184, 145, 79, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+
+    .image-preview {
+        margin-top: 1rem;
+    }
+
+    .image-preview img {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 8px;
+        border: 2px solid var(--primary-gold);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: var(--primary-gold);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--light-gold);
+    }
+
+    .btn-secondary {
+        background: var(--light-gray);
+        color: var(--text-dark);
+    }
+
+    .btn-secondary:hover {
+        background: #ddd;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-edit-container">
+    <a href="{% url 'website:dashboard' %}" class="back-link">← Retour au dashboard</a>
+
+    <form method="POST" enctype="multipart/form-data" class="edit-form">
+        {% csrf_token %}
+        
+        <h1>Éditer : {{ content.get_section_display }}</h1>
+
+        <div class="form-group">
+            <label for="title">Titre *</label>
+            <input type="text" id="title" name="title" value="{{ content.title }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="subtitle">Sous-titre</label>
+            <input type="text" id="subtitle" name="subtitle" value="{{ content.subtitle }}">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description">{{ content.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            {% if content.image %}
+            <div class="image-preview">
+                <p><strong>Image actuelle :</strong></p>
+                {% responsive_image content.image content.title %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'website:dashboard' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

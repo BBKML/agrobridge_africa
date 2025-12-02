@@ -1,0 +1,566 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}AgroBridge Africa - Qui sommes-nous{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page Header avec Vidéo */
+    .page-header {
+        position: relative;
+        color: var(--white);
+        padding: 6rem 2rem;
+        text-align: center;
+        overflow: hidden;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .video-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+    }
+
+    .video-background video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+    }
+
+    .video-background::after {
+        content: '';
+        position: absolute;
+        top: 10;
+        left: 0;
+        width: 100%;
+        height: 100%;
+       
+        z-index: 1;
+    }
+
+    .page-header-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+    }
+
+    .page-header h1 {
+        font-size: 3.5rem;
+        color: var(--primary-gold);
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .page-header p {
+        font-size: 1.4rem;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        animation: fadeInUp 1.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Story Section */
+    .story-section {
+        background: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .story-content {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .story-content h2 {
+        color: var(--primary-green);
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .story-content p {
+        font-size: 1.1rem;
+        line-height: 1.9;
+        margin-bottom: 1.5rem;
+        color: var(--text-dark);
+        text-align: justify;
+    }
+
+    .highlight-box {
+        background: var(--light-gray);
+        padding: 2rem;
+        border-left: 5px solid var(--primary-gold);
+        margin: 2rem 0;
+        border-radius: 8px;
+    }
+
+    .highlight-box p {
+        margin-bottom: 0;
+        font-style: italic;
+        color: var(--primary-green);
+        font-weight: 500;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    /* Image Gallery Section - NOUVEAU */
+    .about-gallery {
+        background: var(--light-gray);
+        padding: 4rem 2rem;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        max-width: 1200px;
+        margin: 3rem auto 0;
+    }
+
+    .gallery-item {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        position: relative;
+        height: 300px;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.1);
+    }
+
+    .gallery-item:hover {
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        color: white;
+        padding: 2rem 1rem 1rem;
+        transform: translateY(100%);
+        transition: transform 0.3s;
+    }
+
+    .gallery-item:hover .gallery-caption {
+        transform: translateY(0);
+    }
+
+    .gallery-caption h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+        color: var(--primary-gold);
+    }
+
+    /* Pillars Section */
+    .pillars-section {
+        background: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .pillars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .pillar-card {
+        background: var(--light-gray);
+        padding: 3rem 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        border-top: 6px solid var(--primary-gold);
+        text-align: center;
+    }
+
+    .pillar-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .pillar-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        display: block;
+    }
+
+    .pillar-card h3 {
+        color: var(--primary-green);
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .pillar-card p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--text-dark);
+    }
+
+    /* Mission Section */
+    .mission-section {
+        background: linear-gradient(rgba(45, 95, 63, 0.9), rgba(26, 58, 41, 0.9)),
+                    url("{% static 'images/IMAGE5.jpg' %}") center/cover fixed;
+        color: var(--white);
+        padding: 5rem 2rem;
+        text-align: center;
+    }
+
+    .mission-content {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .mission-content h2 {
+        font-size: 2.5rem;
+        color: var(--primary-gold);
+        margin-bottom: 2rem;
+    }
+
+    .mission-content p {
+        font-size: 1.3rem;
+        line-height: 1.9;
+        margin-bottom: 1.5rem;
+    }
+
+    .mission-quote {
+        font-size: 1.5rem;
+        font-style: italic;
+        margin-top: 2rem;
+        padding: 2rem;
+        border-top: 2px solid var(--primary-gold);
+        border-bottom: 2px solid var(--primary-gold);
+    }
+
+    /* Values Section */
+    .values-section {
+        background: var(--light-gray);
+        padding: 4rem 2rem;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .value-item {
+        text-align: center;
+        padding: 2rem;
+        background: var(--white);
+        border-radius: 15px;
+        transition: all 0.3s;
+    }
+
+    .value-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .value-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 1.5rem;
+        color: var(--white);
+    }
+
+    .value-item h3 {
+        color: var(--primary-green);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .value-item p {
+        color: var(--text-dark);
+        line-height: 1.7;
+    }
+
+    /* CTA Section */
+    .about-cta {
+        background: var(--white);
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .about-cta h2 {
+        color: var(--primary-green);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .about-cta p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto 2rem;
+        color: var(--text-dark);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-header {
+            height: 400px;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+        }
+
+        .story-content p {
+            text-align: left;
+        }
+
+        .pillar-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .mission-content h2 {
+            font-size: 2rem;
+        }
+
+        .mission-quote {
+            font-size: 1.2rem;
+        }
+
+        .gallery-item {
+            height: 250px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header avec Vidéo -->
+<section class="page-header">
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+            <source src="{% static 'videos/VIDEO1.mp4' %}" type="video/mp4">
+            <source src="{% static 'videos/VIDEO1.webm' %}" type="video/webm">
+            <!-- Image de secours si la vidéo ne charge pas -->
+            <img src="{% static 'images/IMAGE1.jpg' %}" alt="AgroBridge Africa">
+        </video>
+    </div>
+    <div class="page-header-content">
+        <h1>🌍 Notre Histoire</h1>
+        <p>Découvrez comment AgroBridge Africa transforme le commerce agricole africain</p>
+    </div>
+</section>
+
+<!-- Story Section -->
+<section class="story-section">
+    <div class="story-content">
+        <h2>Notre Histoire</h2>
+        <p>
+            AgroBridge Africa est née d'une vision simple : créer un pont solide entre les producteurs africains et les marchés internationaux.
+        </p>
+        <p>
+            Face aux difficultés rencontrées par de nombreuses coopératives agricoles — manque d'accès au marché, faibles revenus, 
+            intermédiaires multiples, pertes post-récolte — nous avons décidé d'agir.
+        </p>
+        <p>
+            Fondée avec la volonté d'apporter des solutions concrètes, AgroBridge Africa s'est donné pour mission de valoriser 
+            le travail des producteurs, tout en garantissant aux acheteurs étrangers des produits agricoles traçables, conformes 
+            et de qualité supérieure.
+        </p>
+        
+        <div class="highlight-box">
+            <p>
+                "Nous croyons fermement qu'un commerce agricole transparent et équitable est le moteur d'un développement durable 
+                pour l'Afrique."
+            </p>
+        </div>
+
+        <p>
+            Depuis notre création, nous avons progressivement bâti un réseau de coopératives engagées, sélectionnées pour leur 
+            sérieux, leur capacité de production et leurs pratiques agricoles responsables.
+        </p>
+        <p>
+            Grâce à cette collaboration étroite, nous assurons une chaîne d'approvisionnement fiable, éthique et durable.
+        </p>
+        <p>
+            Aujourd'hui, AgroBridge Africa se positionne comme un acteur de confiance dans l'exportation de produits agricoles africains.
+        </p>
+    </div>
+</section>
+
+<!-- Gallery Section - NOUVEAU -->
+<section class="about-gallery">
+    <h2 class="section-title">Notre Engagement Visuel</h2>
+    <div class="gallery-grid">
+        <div class="gallery-item">
+            <img src="{% static 'images/image1.jpg' %}" alt="Récolte de cacao" loading="lazy">
+            <div class="gallery-caption">
+                <h4>Récolte de qualité</h4>
+                <p>Sélection minutieuse des meilleures cabosses</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="{% static 'images/IMAGE5.jpg' %}" alt="Nos producteurs" loading="lazy">
+            <div class="gallery-caption">
+                <h4>Nos producteurs</h4>
+                <p>Des partenaires engagés et passionnés</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="{% static 'images/IMAGE3.jpg' %}" alt="Tri du café" loading="lazy">
+            <div class="gallery-caption">
+                <h4>Contrôle qualité</h4>
+                <p>Tri manuel pour une excellence garantie</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="{% static 'images/IMAGE6.jpg' %}" alt="Traitement" loading="lazy">
+            <div class="gallery-caption">
+                <h4>Traitement expert</h4>
+                <p>Techniques traditionnelles et modernes</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="{% static 'images/IMAGE4.jpg' %}" alt="Produits finis" loading="lazy">
+            <div class="gallery-caption">
+                <h4>Excellence du résultat</h4>
+                <p>Produits prêts pour l'export international</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="{% static 'images/IMAGE2.jpg' %}" alt="Noix de cajou" loading="lazy">
+            <div class="gallery-caption">
+                <h4>Qualité premium</h4>
+                <p>Conformes aux standards internationaux</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pillars Section -->
+<section class="pillars-section">
+    <h2 class="section-title">Nos Trois Piliers</h2>
+    <div class="pillars-grid">
+        <div class="pillar-card">
+            <span class="pillar-icon">✔</span>
+            <h3>Transparence</h3>
+            <p>
+                Traçabilité complète du producteur au consommateur, communication claire et engagement envers des pratiques 
+                honnêtes à chaque étape de la chaîne d'approvisionnement.
+            </p>
+        </div>
+        <div class="pillar-card">
+            <span class="pillar-icon">⭐</span>
+            <h3>Qualité</h3>
+            <p>
+                Sélection rigoureuse des produits, suivi strict des standards internationaux, contrôle qualité systématique 
+                avant chaque expédition pour garantir l'excellence.
+            </p>
+        </div>
+        <div class="pillar-card">
+            <span class="pillar-icon">🌱</span>
+            <h3>Impact</h3>
+            <p>
+                Un modèle qui améliore concrètement les revenus des producteurs, renforce les coopératives locales et 
+                soutient activement le développement rural durable.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section avec image de fond -->
+<section class="mission-section">
+    <div class="mission-content">
+        <h2>Notre Mission</h2>
+        <p>
+            AgroBridge Africa continue d'évoluer, d'innover et de s'étendre, avec une vision forte et claire.
+        </p>
+        <div class="mission-quote">
+            "Faire rayonner les richesses agricoles de l'Afrique à travers le monde tout en transformant durablement 
+            la vie des producteurs."
+        </div>
+        <p>
+            Nous nous engageons à être le partenaire de confiance qui facilite l'accès des produits africains de qualité 
+            aux marchés internationaux, tout en garantissant un impact positif durable sur les communautés rurales.
+        </p>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="values-section">
+    <h2 class="section-title">Nos Valeurs</h2>
+    <div class="values-grid">
+        <div class="value-item">
+            <div class="value-icon">🤝</div>
+            <h3>Intégrité</h3>
+            <p>Nous agissons avec honnêteté et éthique dans toutes nos relations commerciales.</p>
+        </div>
+        <div class="value-item">
+            <div class="value-icon">💪</div>
+            <h3>Excellence</h3>
+            <p>Nous visons l'excellence dans chaque aspect de notre travail et nos produits.</p>
+        </div>
+        <div class="value-item">
+            <div class="value-icon">🌍</div>
+            <h3>Durabilité</h3>
+            <p>Nous nous engageons pour un commerce responsable et respectueux de l'environnement.</p>
+        </div>
+        <div class="value-item">
+            <div class="value-icon">👥</div>
+            <h3>Partenariat</h3>
+            <p>Nous construisons des relations à long terme basées sur la confiance mutuelle.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="about-cta">
+    <h2>Rejoignez notre aventure</h2>
+    <p>
+        Ensemble, construisons un avenir meilleur pour l'agriculture africaine. Que vous soyez producteur ou acheteur, 
+        AgroBridge Africa est votre partenaire de confiance.
+    </p>
+    <a href="{% url 'website:contact' %}" class="cta-button">Contactez-nous</a>
+</section>
+{% endblock %}

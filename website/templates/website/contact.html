@@ -1,0 +1,504 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}AgroBridge Africa - Contact{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+        color: var(--white);
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .page-header h1 {
+        font-size: 3rem;
+        color: var(--primary-gold);
+        margin-bottom: 1rem;
+    }
+
+    .page-header p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Contact Section */
+    .contact-section {
+        background: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .contact-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+
+    /* Contact Form */
+    .contact-form-container {
+        background: var(--light-gray);
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .contact-form-container h2 {
+        color: var(--primary-green);
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        color: var(--primary-green);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s;
+        background: var(--white);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-gold);
+        box-shadow: 0 0 0 3px rgba(184, 145, 79, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .submit-button {
+        width: 100%;
+        background: var(--primary-gold);
+        color: var(--white);
+        padding: 1.2rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .submit-button:hover {
+        background: var(--light-gold);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Contact Info */
+    .contact-info-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .contact-info-card {
+        background: var(--white);
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border-left: 5px solid var(--primary-gold);
+        transition: all 0.3s;
+    }
+
+    .contact-info-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .info-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: var(--white);
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-info-card h3 {
+        color: var(--primary-green);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .contact-info-card p {
+        color: var(--text-dark);
+        line-height: 1.8;
+        margin-bottom: 0.5rem;
+        font-size: 1.05rem;
+    }
+
+    .contact-info-card a {
+        color: var(--primary-gold);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .contact-info-card a:hover {
+        color: var(--light-gold);
+        text-decoration: underline;
+    }
+
+    /* Social Links */
+    .social-section {
+        background: var(--primary-green);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+    }
+
+    .social-section h3 {
+        color: var(--primary-gold);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .social-links-list {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .social-link {
+        width: 50px;
+        height: 50px;
+        background: var(--primary-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 1.5rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .social-link:hover {
+        background: var(--light-gold);
+        transform: translateY(-5px);
+    }
+
+    /* Map Section */
+    .map-section {
+        background: var(--light-gray);
+        padding: 4rem 2rem;
+    }
+
+    .map-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .map-container h2 {
+        color: var(--primary-green);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .map-container p {
+        font-size: 1.1rem;
+        color: var(--text-dark);
+        margin-bottom: 2rem;
+    }
+
+    .location-badge {
+        display: inline-block;
+        background: var(--primary-gold);
+        color: var(--white);
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        background: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .faq-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .faq-item {
+        background: var(--light-gray);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--primary-gold);
+    }
+
+    .faq-item h3 {
+        color: var(--primary-green);
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .faq-item p {
+        color: var(--text-dark);
+        line-height: 1.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .contact-container {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2.2rem;
+        }
+
+        .contact-form-container {
+            padding: 2rem;
+        }
+
+        .contact-info-card {
+            padding: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <h1>Contactez-nous</h1>
+    <p>Nous sommes à votre écoute pour répondre à toutes vos questions</p>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+    <div class="contact-container">
+        <!-- Contact Form -->
+        <div class="contact-form-container">
+            <h2>Envoyez-nous un message</h2>
+            <form method="post" action="{% url 'website:contact' %}">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Nom complet *</label>
+                        <input type="text" id="name" name="name" required placeholder="Votre nom">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="votre@email.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+225 XX XX XX XX XX">
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Entreprise</label>
+                        <input type="text" id="company" name="company" placeholder="Nom de votre entreprise">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Sujet *</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Sélectionnez un sujet</option>
+                        <option value="sourcing">Demande de sourcing</option>
+                        <option value="quote">Demande de devis</option>
+                        <option value="partnership">Partenariat</option>
+                        <option value="quality">Question qualité</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="message" required placeholder="Décrivez votre demande en détail..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-button">Envoyer le message</button>
+            </form>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="contact-info-container">
+            <div class="contact-info-card">
+                <div class="info-icon">📧</div>
+                <h3>Email</h3>
+                <p>
+                    <a href="mailto:agrobridge-africa225@gmail.com">
+                        agrobridge-africa225@gmail.com
+                    </a>
+                </p>
+                <p style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                    Réponse sous 24h ouvrées
+                </p>
+            </div>
+
+            <div class="contact-info-card">
+                <div class="info-icon">📱</div>
+                <h3>Téléphones</h3>
+                <p><a href="tel:+18733764330">+1 (873) 376-4330</a></p>
+                <p><a href="tel:+2250749466661">+225 07 49 466 661</a></p>
+                <p><a href="tel:+2250759633142">+225 07 59 633 142</a></p>
+                <p style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                    Lundi - Vendredi : 8h - 18h GMT
+                </p>
+            </div>
+
+            <div class="contact-info-card">
+                <div class="info-icon">📍</div>
+                <h3>Localisation</h3>
+                <p>Abidjan, Côte d'Ivoire</p>
+                <p style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                    Afrique de l'Ouest
+                </p>
+            </div>
+
+            <div class="social-section">
+                <h3>Suivez-nous</h3>
+                <div class="social-links-list">
+                    <a href="#" class="social-link" aria-label="LinkedIn" title="LinkedIn">in</a>
+                    <a href="mailto:agrobridge-africa225@gmail.com" class="social-link" aria-label="Email" title="Email">@</a>
+                    <a href="#" class="social-link" aria-label="WhatsApp" title="WhatsApp">W</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="map-section">
+    <div class="map-container">
+        <h2>Notre Localisation</h2>
+        <p>Basés à Abidjan, nous couvrons toute l'Afrique de l'Ouest</p>
+        
+        <!-- Google Map Embed -->
+        <div style="width: 100%; height: 500px; margin-top: 2rem; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.718476043566!2d-4.0369!3d5.3364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xec535cb0f0f0f01%3A0x12345678!2sAbidjan%2C%20C%C3%B4te%20d%27Ivoire!5e0!3m2!1sfr!2sfr!4v1234567890123" 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+        
+        <div class="location-badge" style="margin-top: 2rem;">
+            🌍 Abidjan, Côte d'Ivoire
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="faq-container">
+        <h2 class="section-title">Questions fréquentes</h2>
+        
+        <div class="faq-item">
+            <h3>Quels sont vos délais de livraison ?</h3>
+            <p>
+                Les délais varient selon la destination et le produit. En moyenne, comptez 2-4 semaines 
+                pour l'Europe et 3-6 semaines pour d'autres destinations. Nous vous fournissons un calendrier 
+                précis lors de la confirmation de commande.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Proposez-vous des échantillons ?</h3>
+            <p>
+                Oui, nous pouvons fournir des échantillons pour permettre à nos clients d'évaluer la qualité 
+                de nos produits. Les frais d'échantillonnage et d'expédition sont à discuter selon votre localisation.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Quelle est la quantité minimale de commande ?</h3>
+            <p>
+                La quantité minimale varie selon le produit. En général, nous acceptons des commandes à partir 
+                d'un conteneur (environ 18-20 tonnes). Contactez-nous pour discuter de vos besoins spécifiques.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Quelles certifications proposez-vous ?</h3>
+            <p>
+                Nos produits peuvent être certifiés selon vos besoins : certification bio, commerce équitable, 
+                Rainforest Alliance, UTZ, et autres standards internationaux. Discutons de vos exigences spécifiques.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Comment garantissez-vous la qualité ?</h3>
+            <p>
+                Nous effectuons des contrôles qualité rigoureux à chaque étape : sélection des producteurs, 
+                inspection des produits, analyses en laboratoire, et contrôle pré-expédition. Tous nos produits 
+                sont accompagnés de certificats de qualité.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: var(--white); padding: 4rem 2rem; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h2 style="font-size: 2.5rem; color: var(--primary-gold); margin-bottom: 1.5rem;">
+            Prêt à démarrer ?
+        </h2>
+        <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 2rem;">
+            Notre équipe d'experts est prête à vous accompagner dans votre projet d'approvisionnement. 
+            Contactez-nous dès aujourd'hui pour une consultation gratuite.
+        </p>
+        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="cta-button">
+            Remplir le formulaire
+        </a>
+    </div>
+</section>
+{% endblock %}

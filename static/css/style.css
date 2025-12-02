@@ -1,0 +1,451 @@
+/* ============================================
+   ANIMATIONS OPTIMISÉES POUR AGROBRIDGE AFRICA
+   ============================================ */
+
+:root {
+    --primary-green: #2d5f3f;
+    --primary-gold: #b8914f;
+    --light-green: #4a8f5e;
+    --light-gold: #d4a56a;
+    --dark-green: #1a3a29;
+    
+    /* Timings optimisés */
+    --duration-fast: 0.2s;
+    --duration-normal: 0.4s;
+    --duration-slow: 0.6s;
+    
+    /* Easing naturel */
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* ============================================
+   1. ANIMATIONS DE BASE - Optimisées GPU
+   ============================================ */
+
+/* ✅ UTILISER transform et opacity (accélération GPU) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 30px, 0); /* translate3d force GPU */
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translate3d(-50px, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Animation flottante optimisée */
+@keyframes float {
+    0%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(0, -10px, 0); /* Réduit de 20px à 10px */
+    }
+}
+
+/* ============================================
+   2. CARDS - Une seule animation au lieu de 3
+   ============================================ */
+
+.feature-card,
+.service-card,
+.product-card,
+.pillar-card {
+    position: relative;
+    transition: transform var(--duration-normal) var(--ease-smooth),
+                box-shadow var(--duration-normal) var(--ease-smooth);
+    /* Préparation GPU */
+    will-change: transform;
+}
+
+/* ❌ SUPPRIMER les ::before et ::after multiples */
+/* ✅ Utiliser UN SEUL effet au hover */
+.feature-card:hover,
+.service-card:hover,
+.product-card:hover,
+.pillar-card:hover {
+    transform: translate3d(0, -10px, 0); /* translateY devient translate3d */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* Effet brillance simple et performant */
+.feature-card::after,
+.service-card::after,
+.product-card::after {
+    content: '';
+    position: absolute;
+    inset: 0; /* Remplace top/left/right/bottom: 0 */
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-normal);
+    pointer-events: none; /* Important pour le hover */
+}
+
+.feature-card:hover::after,
+.service-card:hover::after,
+.product-card:hover::after {
+    opacity: 1;
+}
+
+/* ============================================
+   3. INTERSECTION OBSERVER - Optimisé
+   ============================================ */
+
+.animate-on-scroll {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+    transition: opacity var(--duration-slow) var(--ease-out),
+                transform var(--duration-slow) var(--ease-out);
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+/* Effet cascade avec delay CSS */
+.features-grid .feature-card:nth-child(1) { transition-delay: 0s; }
+.features-grid .feature-card:nth-child(2) { transition-delay: 0.1s; }
+.features-grid .feature-card:nth-child(3) { transition-delay: 0.2s; }
+.features-grid .feature-card:nth-child(4) { transition-delay: 0.3s; }
+
+/* ============================================
+   4. ICÔNES - Animation légère
+   ============================================ */
+
+.feature-icon,
+.service-icon,
+.info-icon {
+    display: inline-block;
+    transition: transform var(--duration-normal) var(--ease-bounce);
+}
+
+.feature-card:hover .feature-icon,
+.service-card:hover .service-icon,
+.contact-info-card:hover .info-icon {
+    transform: scale(1.1) rotate(5deg); /* Réduit de 1.2 à 1.1 */
+}
+
+/* ============================================
+   5. BOUTONS - Animation professionnelle
+   ============================================ */
+
+.cta-button {
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--duration-fast) var(--ease-smooth),
+                box-shadow var(--duration-fast);
+}
+
+/* Effet ripple simplifié */
+.cta-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.2);
+    transform: scale(0);
+    transition: transform var(--duration-normal) var(--ease-out);
+    border-radius: inherit;
+}
+
+.cta-button:active::before {
+    transform: scale(1);
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* ============================================
+   6. NAVIGATION - Smooth
+   ============================================ */
+
+.nav-links a {
+    position: relative;
+    transition: color var(--duration-fast);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gold);
+    transition: width var(--duration-normal) var(--ease-smooth),
+                left var(--duration-normal) var(--ease-smooth);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* ============================================
+   7. FORMULAIRES - Focus élégant
+   ============================================ */
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    transition: border-color var(--duration-fast),
+                box-shadow var(--duration-fast),
+                transform var(--duration-fast);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(184, 145, 79, 0.2);
+}
+
+/* ============================================
+   8. IMAGES PRODUITS - Float subtil
+   ============================================ */
+
+.product-image {
+    animation: float 4s ease-in-out infinite;
+    /* Pause l'animation au hover pour éviter conflit */
+}
+
+.product-card:hover .product-image {
+    animation-play-state: paused;
+}
+
+/* ============================================
+   9. HEADER SCROLL - Performance
+   ============================================ */
+
+header {
+    transition: background-color var(--duration-normal),
+                box-shadow var(--duration-normal);
+    /* Éviter de animer backdrop-filter (coûteux) */
+}
+
+header.scrolled {
+    background-color: rgba(29, 95, 63, 0.95);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* ============================================
+   10. LOADING STATES
+   ============================================ */
+
+/* Spinner optimisé */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* ============================================
+   11. REDUCE MOTION - Accessibilité
+   ============================================ */
+
+/* Respecter les préférences utilisateur */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   12. MOBILE - Animations réduites
+   ============================================ */
+
+@media (max-width: 768px) {
+    /* Désactiver les animations lourdes sur mobile */
+    .feature-card::after,
+    .service-card::after,
+    .product-card::after {
+        display: none;
+    }
+    
+    /* Réduire les durées */
+    :root {
+        --duration-normal: 0.2s;
+        --duration-slow: 0.3s;
+    }
+    
+    /* Désactiver float sur mobile */
+    .product-image,
+    .feature-icon {
+        animation: none;
+    }
+}
+
+/* ============================================
+   13. PERFORMANCE - Will-change ciblé
+   ============================================ */
+
+/* Appliquer will-change SEULEMENT aux éléments qui vont animer */
+.feature-card:hover,
+.service-card:hover,
+.cta-button:hover {
+    will-change: transform;
+}
+
+/* Retirer will-change après animation */
+.feature-card,
+.service-card,
+.cta-button {
+    will-change: auto;
+}
+
+/* ============================================
+   14. PARALLAX - Optimisé
+   ============================================ */
+
+.parallax-section {
+    /* Utiliser transform au lieu de background-position */
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.5s var(--ease-out);
+}
+
+/* ============================================
+   15. MESSAGES - Animation entrée/sortie
+   ============================================ */
+
+@keyframes slideInRight {
+    from {
+        transform: translate3d(400px, 0, 0);
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+    to {
+        transform: translate3d(400px, 0, 0);
+        opacity: 0;
+    }
+}
+
+.alert {
+    animation: slideInRight var(--duration-normal) var(--ease-out);
+}
+
+.alert.hiding {
+    animation: slideOutRight var(--duration-normal) var(--ease-out);
+}
+
+/* ============================================
+   16. 3D CARD TILT - Optimisé
+   ============================================ */
+
+.tilt-card {
+    transform-style: preserve-3d;
+    transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+/* Le JavaScript appliquera transform: perspective() */
+
+/* ============================================
+   17. SCROLL TO TOP - Fade In/Out
+   ============================================ */
+
+.scroll-to-top {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate3d(0, 20px, 0);
+    transition: opacity var(--duration-normal),
+                visibility var(--duration-normal),
+                transform var(--duration-normal) var(--ease-out);
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(0, 0, 0);
+}
+
+/* ============================================
+   18. HOVER STATES - Cohérence
+   ============================================ */
+
+/* Tous les liens ont le même comportement */
+a:not(.cta-button) {
+    transition: color var(--duration-fast);
+}
+
+a:not(.cta-button):hover {
+    color: var(--primary-gold);
+}
+
+/* ============================================
+   19. FOCUS VISIBLE - Accessibilité
+   ============================================ */
+
+*:focus-visible {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ============================================
+   20. CUSTOM CURSOR - Desktop only
+   ============================================ */
+
+@media (min-width: 1024px) and (hover: hover) {
+    .custom-cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--primary-gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform var(--duration-fast),
+                    border-color var(--duration-fast);
+        transform: translate(-50%, -50%);
+    }
+    
+    .custom-cursor.hover {
+        transform: translate(-50%, -50%) scale(1.5);
+        border-color: var(--primary-green);
+    }
+}

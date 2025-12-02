@@ -1,0 +1,597 @@
+{% extends 'website/base.html' %}
+{% load static responsive_images %}
+
+{% block title %}AgroBridge Africa - Produits{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(rgba(45, 95, 63, 0.85), rgba(45, 95, 63, 0.85)),
+        url("{% static 'images/image1.jpg' %}") center/cover;
+        color: var(--white);
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .page-header h1 {
+        font-size: 3rem;
+        color: var(--primary-gold);
+        margin-bottom: 1rem;
+    }
+
+    .page-header p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Products Section */
+    .products-section {
+        background: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .products-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .product-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 5rem;
+        align-items: center;
+    }
+
+    .product-item:nth-child(even) {
+        direction: rtl;
+    }
+
+    .product-item:nth-child(even) > * {
+        direction: ltr;
+    }
+
+    .product-image-container {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        height: 400px;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+    }
+
+    .product-item:hover .product-image img {
+        transform: scale(1.05);
+    }
+
+    .product-image::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+        animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { transform: translate(-30%, -30%); }
+        50% { transform: translate(30%, 30%); }
+    }
+
+    .product-content {
+        padding: 2rem;
+    }
+
+    .product-badge {
+        display: inline-block;
+        background: var(--primary-gold);
+        color: var(--white);
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .product-content h2 {
+        color: var(--primary-green);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-subtitle {
+        color: var(--primary-gold);
+        font-size: 1.4rem;
+        font-style: italic;
+        margin-bottom: 1.5rem;
+    }
+
+    .product-description {
+        font-size: 1.15rem;
+        line-height: 1.9;
+        color: var(--text-dark);
+        margin-bottom: 2rem;
+    }
+
+    .product-features {
+        background: var(--light-gray);
+        padding: 2rem;
+        border-radius: 15px;
+        border-left: 5px solid var(--primary-gold);
+    }
+
+    .product-features h3 {
+        color: var(--primary-green);
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .product-features ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .product-features li {
+        padding: 0.7rem 0;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        font-size: 1.05rem;
+    }
+
+    .product-features li::before {
+        content: '✔';
+        color: var(--primary-gold);
+        font-weight: bold;
+        margin-right: 1rem;
+        font-size: 1.3rem;
+    }
+
+    /* Process Gallery - NOUVEAU */
+    .process-gallery {
+        background: var(--light-gray);
+        padding: 4rem 2rem;
+    }
+
+    .process-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .process-card {
+        background: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+
+    .process-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .process-image {
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .process-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .process-card:hover .process-image img {
+        transform: scale(1.1);
+    }
+
+    .process-content {
+        padding: 2rem;
+    }
+
+    .process-content h3 {
+        color: var(--primary-green);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .process-content p {
+        color: var(--text-dark);
+        line-height: 1.7;
+    }
+
+    /* Specifications */
+    .specifications {
+        background: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .spec-card {
+        background: var(--light-gray);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .spec-card h3 {
+        color: var(--primary-green);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .spec-card h3::before {
+        content: '📋';
+        margin-right: 0.5rem;
+        font-size: 1.5rem;
+    }
+
+    .spec-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .spec-list li {
+        padding: 0.7rem 0;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .spec-list li:last-child {
+        border-bottom: none;
+    }
+
+    .spec-label {
+        font-weight: 600;
+        color: var(--primary-green);
+    }
+
+    .spec-value {
+        color: var(--text-dark);
+    }
+
+    /* Quality Section */
+    .quality-section {
+        background: linear-gradient(rgba(45, 95, 63, 0.9), rgba(26, 58, 41, 0.9)),
+                    url("{% static 'images/IMAGE6.jpg' %}") center/cover;
+        color: var(--white);
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .quality-content {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .quality-content h2 {
+        font-size: 2.5rem;
+        color: var(--primary-gold);
+        margin-bottom: 2rem;
+    }
+
+    .quality-content p {
+        font-size: 1.2rem;
+        line-height: 1.9;
+        margin-bottom: 2rem;
+    }
+
+    .quality-badges {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 3rem;
+    }
+
+    .quality-badge {
+        background: rgba(255,255,255,0.15);
+        padding: 2rem;
+        border-radius: 15px;
+        min-width: 200px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s;
+    }
+
+    .quality-badge:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-5px);
+    }
+
+    .quality-badge-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .quality-badge h3 {
+        color: var(--primary-gold);
+        font-size: 1.3rem;
+    }
+
+    /* CTA Section */
+    .products-cta {
+        background: var(--light-gray);
+        padding: 5rem 2rem;
+        text-align: center;
+    }
+
+    .products-cta h2 {
+        color: var(--primary-green);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .products-cta p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto 2rem;
+        color: var(--text-dark);
+        line-height: 1.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .product-item {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .product-item:nth-child(even) {
+            direction: ltr;
+        }
+
+        .product-image-container {
+            height: 300px;
+        }
+
+        .product-content h2 {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2.2rem;
+        }
+
+        .quality-badges {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .process-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header avec image de fond -->
+<section class="page-header">
+    <h1>Nos Produits</h1>
+    <p>Des produits agricoles africains de qualité supérieure pour le marché international</p>
+</section>
+
+<!-- Products Section avec vraies images -->
+<section class="products-section">
+    <div class="products-container">
+        {% for product in products %}
+        <div class="product-item">
+            <div class="product-image-container">
+                <div class="product-image">
+                    {% responsive_image product.image product.name class_attr="no-round" %}
+                </div>
+            </div>
+            <div class="product-content">
+                <span class="product-badge">PRODUIT PREMIUM</span>
+                <h2>{{ product.name }}</h2>
+                <p class="product-subtitle">{% if product.name_en %}{{ product.name_en }}{% else %}{{ product.name }}{% endif %}</p>
+                <p class="product-description">{{ product.description }}</p>
+                <div class="product-features">
+                    <h3>Caractéristiques principales :</h3>
+                    <div>{{ product.features|linebreaksbr }}</div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Aucun produit pour le moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Process Gallery - NOUVELLE SECTION avec vos images -->
+<section class="process-gallery">
+    <h2 class="section-title">Notre Processus en Images</h2>
+    <div class="process-grid">
+        <div class="process-card">
+            <div class="process-image">
+                <img src="{% static 'images/image1.jpg' %}" alt="Récolte du cacao" loading="lazy">
+            </div>
+            <div class="process-content">
+                <h3>🌱 Récolte</h3>
+                <p>Cueillette sélective des cabosses mûres par nos producteurs partenaires. Chaque cabosse est inspectée pour garantir la qualité optimale des fèves.</p>
+            </div>
+        </div>
+
+        <div class="process-card">
+            <div class="process-image">
+                <img src="{% static 'images/IMAGE5.jpg' %}" alt="Producteur de cacao" loading="lazy">
+            </div>
+            <div class="process-content">
+                <h3>👨‍🌾 Producteurs</h3>
+                <p>Collaboration directe avec des coopératives certifiées qui appliquent les meilleures pratiques agricoles et garantissent des revenus équitables.</p>
+            </div>
+        </div>
+
+        <div class="process-card">
+            <div class="process-image">
+                <img src="{% static 'images/image3.jpg' %}" alt="Traitement" loading="lazy">
+            </div>
+            <div class="process-content">
+                <h3>⚙️ Traitement</h3>
+                <p>Fermentation, séchage et triage effectués selon des protocoles stricts pour préserver les qualités organoleptiques des produits.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Specifications Section -->
+<section class="specifications">
+    <h2 class="section-title">Spécifications techniques</h2>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>Fèves de cacao</h3>
+            <ul class="spec-list">
+                <li>
+                    <span class="spec-label">Humidité :</span>
+                    <span class="spec-value">≤ 7%</span>
+                </li>
+                <li>
+                    <span class="spec-label">Fermentation :</span>
+                    <span class="spec-value">≥ 75%</span>
+                </li>
+                <li>
+                    <span class="spec-label">Fèves défectueuses :</span>
+                    <span class="spec-value">≤ 3%</span>
+                </li>
+                <li>
+                    <span class="spec-label">Conditionnement :</span>
+                    <span class="spec-value">Sacs jute 60-65kg</span>
+                </li>
+                <li>
+                    <span class="spec-label">Origine :</span>
+                    <span class="spec-value">Côte d'Ivoire, Ghana</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="spec-card">
+            <h3>Grains de café</h3>
+            <ul class="spec-list">
+                <li>
+                    <span class="spec-label">Humidité :</span>
+                    <span class="spec-value">10-12%</span>
+                </li>
+                <li>
+                    <span class="spec-label">Variétés :</span>
+                    <span class="spec-value">Arabica, Robusta</span>
+                </li>
+                <li>
+                    <span class="spec-label">Grade :</span>
+                    <span class="spec-value">AA, AB, Grade 1</span>
+                </li>
+                <li>
+                    <span class="spec-label">Conditionnement :</span>
+                    <span class="spec-value">Sacs jute 60kg</span>
+                </li>
+                <li>
+                    <span class="spec-label">Origine :</span>
+                    <span class="spec-value">Éthiopie, Côte d'Ivoire</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="spec-card">
+            <h3>Noix de cajou</h3>
+            <ul class="spec-list">
+                <li>
+                    <span class="spec-label">Humidité :</span>
+                    <span class="spec-value">≤ 10%</span>
+                </li>
+                <li>
+                    <span class="spec-label">Types :</span>
+                    <span class="spec-value">Brutes, Décortiquées</span>
+                </li>
+                <li>
+                    <span class="spec-label">Grades :</span>
+                    <span class="spec-value">W180, W240, W320</span>
+                </li>
+                <li>
+                    <span class="spec-label">Conditionnement :</span>
+                    <span class="spec-value">Sacs 50-80kg / Cartons</span>
+                </li>
+                <li>
+                    <span class="spec-label">Origine :</span>
+                    <span class="spec-value">Côte d'Ivoire, Bénin</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Quality Section avec image de fond -->
+<section class="quality-section">
+    <div class="quality-content">
+        <h2>Notre Engagement Qualité</h2>
+        <p>
+            Chaque produit AgroBridge Africa est soumis à des contrôles qualité rigoureux avant expédition. 
+            Nous respectons les standards internationaux les plus exigeants pour garantir votre satisfaction 
+            et celle de vos clients.
+        </p>
+        <div class="quality-badges">
+            <div class="quality-badge">
+                <span class="quality-badge-icon">✔</span>
+                <h3>Inspection pré-expédition</h3>
+            </div>
+            <div class="quality-badge">
+                <span class="quality-badge-icon">🔬</span>
+                <h3>Analyses laboratoire</h3>
+            </div>
+            <div class="quality-badge">
+                <span class="quality-badge-icon">📜</span>
+                <h3>Certifications internationales</h3>
+            </div>
+            <div class="quality-badge">
+                <span class="quality-badge-icon">🌍</span>
+                <h3>Traçabilité totale</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="products-cta">
+    <h2>Intéressé par nos produits ?</h2>
+    <p>
+        Contactez-nous pour recevoir notre catalogue complet, des échantillons ou discuter de vos besoins 
+        spécifiques. Notre équipe est prête à vous accompagner dans votre approvisionnement.
+    </p>
+    <a href="{% url 'website:contact' %}" class="cta-button">Demander un échantillon</a>
+</section>
+{% endblock %}

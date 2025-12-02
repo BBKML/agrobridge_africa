@@ -1,0 +1,205 @@
+{% extends 'website/base.html' %}
+{% load static responsive_images %}
+
+{% block title %}{% if service %}Éditer service{% else %}Nouveau service{% endif %} - AgroBridge Africa{% endblock %}
+
+{% block extra_css %}
+<style>
+    .service-edit-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--primary-gold);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: all 0.3s;
+    }
+
+    .back-link:hover {
+        color: var(--light-gold);
+    }
+
+    .edit-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .edit-form h1 {
+        color: var(--primary-green);
+        margin-bottom: 2rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-row.full {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        color: var(--primary-green);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-gold);
+        box-shadow: 0 0 0 3px rgba(184, 145, 79, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: auto;
+    }
+
+    .emoji-hint {
+        font-size: 2rem;
+        margin-top: 0.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: var(--primary-gold);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--light-gold);
+    }
+
+    .btn-secondary {
+        background: var(--light-gray);
+        color: var(--text-dark);
+    }
+
+    .btn-secondary:hover {
+        background: #ddd;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: #999;
+        margin-top: 0.3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="service-edit-container">
+    <a href="{% url 'website:services_manage' %}" class="back-link">← Retour à la gestion</a>
+
+    <form method="POST" enctype="multipart/form-data" class="edit-form">
+        {% csrf_token %}
+        
+        <h1>{% if service %}Éditer : {{ service.name }}{% else %}Nouveau service{% endif %}</h1>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Nom du service *</label>
+                <input type="text" id="name" name="name" value="{{ service.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Image du service</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                <p class="help-text">Téléversez une image pour le service (format JPG/PNG). Si aucune image n'est fournie, un placeholder sera affiché.</p>
+                {% if service and service.image %}
+                <div style="margin-top:0.5rem">
+                    {% responsive_image service.image service.name class_attr="" %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group form-row full">
+            <label for="description">Description *</label>
+            <textarea id="description" name="description" required>{{ service.description }}</textarea>
+        </div>
+
+        <div class="form-group form-row full">
+            <label for="features">Caractéristiques (une par ligne)</label>
+            <textarea id="features" name="features">{{ service.features }}</textarea>
+            <p class="help-text">Chaque ligne devient une caractéristique listée</p>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="order">Ordre d'affichage</label>
+                <input type="number" id="order" name="order" value="{{ service.order }}" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="is_active">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="is_active" name="is_active" {% if service.is_active %}checked{% endif %}>
+                        <span>Service actif</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'website:services_manage' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

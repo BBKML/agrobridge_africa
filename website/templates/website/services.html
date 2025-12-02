@@ -1,0 +1,391 @@
+{% extends 'website/base.html' %}
+{% load static responsive_images %}
+
+{% block title %}AgroBridge Africa - Services{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page Header */
+    .page-header {
+        color: var(--white);
+        padding: 4rem 2rem;
+        text-align: center;
+        /* default gradient background; if a PageContent image is provided we set it inline on the section element */
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+    }
+
+    .page-header h1 {
+        font-size: 3rem;
+        color: var(--primary-gold);
+        margin-bottom: 1rem;
+    }
+
+    .page-header p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Services Grid */
+    .services-section {
+        background: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .service-card {
+        background: var(--white);
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.4s;
+        border-top: 6px solid var(--primary-gold);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        opacity: 0;
+        transition: opacity 0.4s;
+        z-index: 0;
+    }
+
+    .service-card:hover::before {
+        opacity: 0.05;
+    }
+
+    .service-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .service-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--white);
+    }
+
+    .service-card h3 {
+        color: var(--primary-green);
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .service-subtitle {
+        color: var(--primary-gold);
+        font-style: italic;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    .service-card p {
+        color: var(--text-dark);
+        line-height: 1.9;
+        font-size: 1.05rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .service-features {
+        list-style: none;
+        padding: 0;
+        margin-top: 1.5rem;
+    }
+
+    .service-features li {
+        padding: 0.7rem 0;
+        color: var(--text-dark);
+        border-bottom: 1px solid var(--light-gray);
+        display: flex;
+        align-items: center;
+    }
+
+    .service-features li:last-child {
+        border-bottom: none;
+    }
+
+    .service-features li::before {
+        content: '✓';
+        color: var(--primary-gold);
+        font-weight: bold;
+        margin-right: 1rem;
+        font-size: 1.2rem;
+    }
+
+    /* Process Section */
+    .process-section {
+        background: var(--light-gray);
+        padding: 4rem 2rem;
+    }
+
+    .process-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .process-step {
+        background: var(--white);
+        padding: 2.5rem 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .step-number {
+        width: 60px;
+        height: 60px;
+        background: var(--primary-gold);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin: 0 auto 1.5rem;
+    }
+
+    .process-step h3 {
+        color: var(--primary-green);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .process-step p {
+        color: var(--text-dark);
+        line-height: 1.7;
+    }
+
+    /* Benefits Section */
+    .benefits-section {
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        color: var(--white);
+        padding: 4rem 2rem;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .benefit-item {
+        background: rgba(255,255,255,0.1);
+        padding: 2rem;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s;
+    }
+
+    .benefit-item:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateY(-5px);
+    }
+
+    .benefit-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .benefit-item h3 {
+        color: var(--primary-gold);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .benefit-item p {
+        line-height: 1.8;
+    }
+
+    /* CTA Section */
+    .services-cta {
+        background: var(--white);
+        padding: 5rem 2rem;
+        text-align: center;
+    }
+
+    .services-cta h2 {
+        color: var(--primary-green);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .services-cta p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto 2rem;
+        color: var(--text-dark);
+        line-height: 1.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2.2rem;
+        }
+
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .service-card {
+            padding: 2rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+        }
+
+        .services-cta h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" {% if contents.services_intro and contents.services_intro.image %}style="background: linear-gradient(135deg, rgba(45,95,63,0.6), rgba(181, 209, 170,0.35)), url('{{ contents.services_intro.image.url }}') center/cover;"{% endif %}>
+    <h1>Nos Services</h1>
+    <p>Des solutions complètes pour faciliter votre commerce agricole international</p>
+</section>
+
+<!-- Services Section -->
+<section class="services-section">
+    <h2 class="section-title">Ce que nous offrons</h2>
+    <div class="services-grid">
+        {% for service in services %}
+        <div class="service-card">
+            <div class="service-content">
+                {% if service.image %}
+                <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;margin-bottom:1.2rem">
+                    <img src="{{ service.image.url }}" alt="{{ service.name }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                </div>
+                {% endif %}
+                <h3>{{ service.name }}</h3>
+                <p class="service-subtitle">{% if service.name_en %}{{ service.name_en }}{% endif %}</p>
+                <p>
+                    {{ service.description }}
+                </p>
+                <ul class="service-features">
+                    {% for line in service.features|splitlines %}
+                        {% if line %}<li>{{ line }}</li>{% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% empty %}
+        <p>Aucun service disponible pour le moment.</p>
+        {% endfor %}
+
+        {# removed hard-coded fallback service cards to avoid duplication; create services in admin instead #}
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="process-section">
+    <h2 class="section-title">Notre Processus</h2>
+    <div class="process-steps">
+        <div class="process-step">
+            <div class="step-number">1</div>
+            <h3>Consultation</h3>
+            <p>Nous analysons vos besoins spécifiques et définissons ensemble les critères de qualité requis.</p>
+        </div>
+        <div class="process-step">
+            <div class="step-number">2</div>
+            <h3>Sourcing</h3>
+            <p>Identification et sélection des meilleurs producteurs correspondant à vos exigences.</p>
+        </div>
+        <div class="process-step">
+            <div class="step-number">3</div>
+            <h3>Contrôle Qualité</h3>
+            <p>Inspection rigoureuse et tests de conformité selon les standards internationaux.</p>
+        </div>
+        <div class="process-step">
+            <div class="step-number">4</div>
+            <h3>Logistique</h3>
+            <p>Organisation complète de l'expédition avec suivi en temps réel jusqu'à destination.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits-section">
+    <h2 class="section-title" style="color: var(--primary-gold);">Pourquoi travailler avec nous ?</h2>
+    <div class="benefits-grid">
+        <div class="benefit-item">
+            <span class="benefit-icon">🎯</span>
+            <h3>Expertise locale</h3>
+            <p>Une connaissance approfondie des marchés et producteurs africains pour vous garantir les meilleures sources.</p>
+        </div>
+        <div class="benefit-item">
+            <span class="benefit-icon">🔍</span>
+            <h3>Traçabilité totale</h3>
+            <p>Du producteur jusqu'à vous, chaque étape est documentée et vérifiable pour une transparence maximale.</p>
+        </div>
+        <div class="benefit-item">
+            <span class="benefit-icon">⚡</span>
+            <h3>Réactivité</h3>
+            <p>Une équipe dédiée qui répond rapidement à vos demandes et s'adapte à vos contraintes de délais.</p>
+        </div>
+        <div class="benefit-item">
+            <span class="benefit-icon">💼</span>
+            <h3>Solutions sur mesure</h3>
+            <p>Des services personnalisés qui s'adaptent parfaitement à la taille et aux besoins de votre entreprise.</p>
+        </div>
+        <div class="benefit-item">
+            <span class="benefit-icon">🌱</span>
+            <h3>Impact positif</h3>
+            <p>Contribuez au développement durable des communautés agricoles africaines à travers un commerce équitable.</p>
+        </div>
+        <div class="benefit-item">
+            <span class="benefit-icon">🤝</span>
+            <h3>Partenariat durable</h3>
+            <p>Nous construisons des relations à long terme basées sur la confiance mutuelle et le succès partagé.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="services-cta">
+    <h2>Prêt à démarrer votre projet ?</h2>
+    <p>
+        Contactez-nous dès aujourd'hui pour discuter de vos besoins en approvisionnement agricole. 
+        Notre équipe d'experts est prête à vous accompagner dans votre réussite.
+    </p>
+    <a href="{% url 'website:contact' %}" class="cta-button">Demander un devis</a>
+</section>
+{% endblock %}

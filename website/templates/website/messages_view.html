@@ -1,0 +1,222 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Gestion des messages - AgroBridge Africa{% endblock %}
+
+{% block extra_css %}
+<style>
+    .messages-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .messages-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .messages-header h1 {
+        color: var(--primary-green);
+    }
+
+    .filter-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-tab {
+        padding: 0.8rem 1.5rem;
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--text-dark);
+        transition: all 0.3s;
+    }
+
+    .filter-tab.active {
+        background: var(--primary-gold);
+        color: white;
+        border-color: var(--primary-gold);
+    }
+
+    .filter-tab:hover {
+        border-color: var(--primary-gold);
+    }
+
+    .messages-list {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .message-row {
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: center;
+        transition: all 0.3s;
+    }
+
+    .message-row:last-child {
+        border-bottom: none;
+    }
+
+    .message-row:hover {
+        background: var(--light-gray);
+    }
+
+    .message-row.unread {
+        background: rgba(184, 145, 79, 0.05);
+        border-left: 4px solid var(--primary-gold);
+        padding-left: calc(1.5rem - 4px);
+    }
+
+    .message-content {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .message-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--primary-green);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .message-info {
+        flex: 1;
+    }
+
+    .message-info h3 {
+        color: var(--primary-green);
+        margin-bottom: 0.3rem;
+    }
+
+    .message-info p {
+        color: var(--text-dark);
+        margin: 0.2rem 0;
+        font-size: 0.95rem;
+    }
+
+    .message-info .email {
+        color: var(--primary-gold);
+        text-decoration: none;
+    }
+
+    .message-date {
+        color: #999;
+        font-size: 0.85rem;
+    }
+
+    .message-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .msg-btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .msg-btn-view {
+        background: var(--primary-gold);
+        color: white;
+    }
+
+    .msg-btn-view:hover {
+        background: var(--light-gold);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--text-dark);
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--primary-gold);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: all 0.3s;
+    }
+
+    .back-link:hover {
+        color: var(--light-gold);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+    <a href="{% url 'website:dashboard' %}" class="back-link">← Retour au dashboard</a>
+
+    <div class="messages-header">
+        <h1>Gestion des messages</h1>
+    </div>
+
+    <div class="filter-tabs">
+        <a href="{% url 'website:messages_view' %}" class="filter-tab {% if filter_type == 'all' %}active{% endif %}">
+            Tous ({{ messages.count }})
+        </a>
+        <a href="{% url 'website:messages_view' %}?filter=unread" class="filter-tab {% if filter_type == 'unread' %}active{% endif %}">
+            Non lus
+        </a>
+    </div>
+
+    {% if messages %}
+        <div class="messages-list">
+            {% for msg in messages %}
+            <div class="message-row {% if not msg.is_read %}unread{% endif %}">
+                <div class="message-content">
+                    <div class="message-avatar">{{ msg.name|first|upper }}</div>
+                    <div class="message-info">
+                        <h3>{{ msg.name }}</h3>
+                        <p><a href="mailto:{{ msg.email }}" class="email">{{ msg.email }}</a>
+                            {% if msg.phone %}
+                                | {{ msg.phone }}
+                            {% endif %}
+                        </p>
+                        <p>{{ msg.message|truncatewords:20 }}</p>
+                        <div class="message-date">
+                            {% if msg.is_read %}
+                                ✓ Lu le {{ msg.created_at|date:"d/m/Y à H:i" }}
+                            {% else %}
+                                <strong>Non lu - {{ msg.created_at|date:"d/m/Y à H:i" }}</strong>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="message-actions">
+                    <a href="{% url 'website:message_detail' msg.pk %}" class="msg-btn msg-btn-view">Lire</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>Aucun message trouvé.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

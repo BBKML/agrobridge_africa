@@ -1,0 +1,229 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}Détail du message - AgroBridge Africa{% endblock %}
+
+{% block extra_css %}
+<style>
+    .message-detail-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--primary-gold);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: all 0.3s;
+    }
+
+    .back-link:hover {
+        color: var(--light-gold);
+    }
+
+    .message-detail-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .message-header {
+        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        color: white;
+        padding: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .message-header h1 {
+        color: white;
+        margin: 0;
+    }
+
+    .message-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        background: rgba(255,255,255,0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-size: 0.9rem;
+    }
+
+    .unread-badge {
+        background: var(--primary-gold);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+
+    .message-body {
+        padding: 2rem;
+    }
+
+    .message-body h3 {
+        color: var(--primary-green);
+        margin-bottom: 1rem;
+    }
+
+    .message-text {
+        color: var(--text-dark);
+        line-height: 1.8;
+        padding: 1.5rem;
+        background: var(--light-gray);
+        border-left: 4px solid var(--primary-gold);
+        border-radius: 5px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .contact-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .detail-box {
+        background: var(--light-gray);
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .detail-box h4 {
+        color: var(--primary-green);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    .detail-box p {
+        color: var(--text-dark);
+        margin: 0;
+    }
+
+    .detail-box a {
+        color: var(--primary-gold);
+        text-decoration: none;
+    }
+
+    .detail-box a:hover {
+        text-decoration: underline;
+    }
+
+    .message-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+    }
+
+    .action-btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .action-btn-back {
+        background: var(--primary-green);
+        color: white;
+    }
+
+    .action-btn-back:hover {
+        background: var(--dark-green);
+    }
+
+    .action-btn-delete {
+        background: #f44336;
+        color: white;
+    }
+
+    .action-btn-delete:hover {
+        background: #d32f2f;
+    }
+
+    .timestamp {
+        color: #999;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="message-detail-container">
+    <a href="{% url 'website:messages_view' %}" class="back-link">← Retour à la liste</a>
+
+    <div class="message-detail-card">
+        <div class="message-header">
+            <div>
+                <h1>{{ message.name }}</h1>
+                <div class="message-meta">
+                    <div class="meta-item">📧 {{ message.email }}</div>
+                    {% if message.phone %}
+                    <div class="meta-item">📱 {{ message.phone }}</div>
+                    {% endif %}
+                    <div class="meta-item timestamp">{{ message.created_at|date:"d/m/Y à H:i" }}</div>
+                </div>
+            </div>
+            {% if not message.is_read %}
+            <div class="unread-badge">Non lu</div>
+            {% endif %}
+        </div>
+
+        <div class="message-body">
+            {% if message.subject %}
+            <h3>Sujet : {{ message.subject }}</h3>
+            {% endif %}
+
+            <h3>Message</h3>
+            <div class="message-text">{{ message.message }}</div>
+
+            <div class="contact-details">
+                <div class="detail-box">
+                    <h4>Nom</h4>
+                    <p>{{ message.name }}</p>
+                </div>
+                <div class="detail-box">
+                    <h4>Email</h4>
+                    <p><a href="mailto:{{ message.email }}">{{ message.email }}</a></p>
+                </div>
+                {% if message.phone %}
+                <div class="detail-box">
+                    <h4>Téléphone</h4>
+                    <p><a href="tel:{{ message.phone }}">{{ message.phone }}</a></p>
+                </div>
+                {% endif %}
+                <div class="detail-box">
+                    <h4>Reçu le</h4>
+                    <p>{{ message.created_at|date:"d/m/Y à H:i:s" }}</p>
+                </div>
+            </div>
+
+            <div class="message-actions">
+                <a href="{% url 'website:messages_view' %}" class="action-btn action-btn-back">Retour</a>
+                <form method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete">
+                    <button type="submit" class="action-btn action-btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
